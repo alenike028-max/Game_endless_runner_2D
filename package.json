@@ -1,0 +1,15 @@
+{
+  "name": "endless-runner",
+  "version": "1.0.0",
+  "description": "2D Endless Runner Game in TypeScript",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "npx http-server -p 8080 -c-1"
+  },
+
+  "devDependencies": {              
+    "typescript": "^5.4.0",
+    "http-server": "^14.1.1"
+  }
+}

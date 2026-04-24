@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Runner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Menu Iniziale -->
+        <div id="menu-screen" class="screen">
+            <h1 class="game-title">Luigi the Worm</h1>
+            <p class="subtitle">Corri, salta e scivola!</p>
+            <div class="best-score-display">
+                <span>Best Score:</span>
+                <span id="menu-best-score">0</span>
+            </div>
+            <button id="start-btn" class="btn-primary">START</button>
+            <div class="controls-hint">
+                <p><kbd>SPAZIO</kbd> Salta</p>
+                <p><kbd>↓</kbd> Scivola</p>
+            </div>
+        </div>
+
+        <!-- HUD durante il gioco -->
+        <div id="hud" class="screen hidden">
+            <div class="score-container">
+                <div class="score-item">
+                    <span class="score-label">Score</span>
+                    <span id="current-score">0</span>
+                </div>
+                <div class="score-item">
+                    <span class="score-label">Best</span>
+                    <span id="hud-best-score">0</span>
+                </div>
+            </div>
+            <button id="pause-btn" class="btn-icon">⏸</button>
+        </div>
+
+        <!-- Pausa -->
+        <div id="pause-screen" class="screen hidden">
+            <h2>PAUSA</h2>
+            <button id="resume-btn" class="btn-primary">RIPRENDI</button>
+        </div>
+
+        <!-- Game Over -->
+        <div id="gameover-screen" class="screen hidden">
+            <h2 class="gameover-title">GAME OVER</h2>
+            <div class="final-score">
+                <span>Punteggio:</span>
+                <span id="final-score">0</span>
+            </div>
+            <div class="best-score-display">
+                <span>Best Score:</span>
+                <span id="gameover-best-score">0</span>
+            </div>
+            <button id="restart-btn" class="btn-primary">RIPROVA</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GameLoop } from './dist/gameLoop.js';
+        import { UIManager, GameState } from './dist/ui.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('game-canvas');
+            const ui = new UIManager();
+            const game = new GameLoop(canvas, ui);
+
+            ui.onStart = () => { ui.startGame(); game.start(); };
+            ui.onResume = () => { game.resume(); };
+            ui.onRestart = () => { ui.startGame(); game.start(); };
+
+            window.addEventListener('keydown', (e) => {
+                if (e.code === 'KeyP') {
+                    e.preventDefault();
+                    const state = ui.getState();
+                    if (state === GameState.PLAYING) ui.pauseGame();
+                    else if (state === GameState.PAUSED) ui.resumeGame();
+                }
+            });
+
+            ui.showMenu();
+            console.log('Endless Runner inizializzato!');
+            console.log('Controlli: SPAZIO = Salta, FRECCIA GIÙ = Scivola, P = Pausa');
+        });
+    </script>
+</body>
+</html>
